@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Deck from './src/Deck';
 
 const DATA = [
@@ -46,10 +46,14 @@ const DATA = [
 ];
 
 export default class App extends React.Component {
+  renderCard(item) {
+    return <Text key={item.id}>{item.text}</Text>;
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Deck />
+        <Deck data={DATA} renderCard={this.renderCard} />
       </View>
     );
   }
