@@ -1,7 +1,20 @@
 import React, { Component } from 'react';
-import { View, Animated } from 'react-native';
+import { View, Animated, PanResponder } from 'react-native';
 
 class Deck extends Component {
+  constructor(props) {
+    super(props);
+
+    //set up panResponder for responding to pan gesture
+    const panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (event, gesture) => {},
+      onPanResponderRelease: () => {}
+    });
+
+    this.panResponder = panResponder;
+  }
+
   renderCards() {
     return this.props.data.map(item => {
       return this.props.renderCard(item);
@@ -9,7 +22,7 @@ class Deck extends Component {
   }
 
   render() {
-    return <View>{this.renderCards()}</View>;
+    return <View {...this.panResponder.panHandlers}>{this.renderCards()}</View>;
   }
 }
 
