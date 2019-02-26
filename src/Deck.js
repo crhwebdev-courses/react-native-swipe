@@ -8,8 +8,8 @@ const SWIPE_OUT_DURATION = 250;
 class Deck extends Component {
   //default props for when user does not pass a prop to the component
   static defaultProps = {
-    onSwipeRight: () => null,
-    onSwipeLeft: () => null
+    onSwipeRight: item => {},
+    onSwipeLeft: item => {}
   };
 
   constructor(props) {
@@ -52,7 +52,11 @@ class Deck extends Component {
   onSwipeComplete(direction) {
     //callbacks passed to compoent
     const { onSwipeLeft, onSwipeRight, data } = this.props;
+
     const item = data[this.state.index];
+
+    this.setState({ index: this.state.index + 1 });
+    this.position.setValue({ x: 0, y: 0 });
 
     //call appropriate callback based on direction of swipe
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
