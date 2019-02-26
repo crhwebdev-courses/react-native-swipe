@@ -6,6 +6,12 @@ const SWIPE_THRESHOLD = 0.35 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
 
 class Deck extends Component {
+  //default props for when user does not pass a prop to the component
+  static defaultProps = {
+    onSwipeRight: () => null,
+    onSwipeLeft: () => null
+  };
+
   constructor(props) {
     super(props);
 
@@ -30,6 +36,8 @@ class Deck extends Component {
 
     this.panResponder = panResponder;
     this.position = position;
+
+    this.state = { index: 0 };
   }
 
   forceSwipe(direction) {
@@ -38,7 +46,16 @@ class Deck extends Component {
     Animated.timing(this.position, {
       toValue: { x, y: 0 },
       duration: SWIPE_OUT_DURATION
-    }).start();
+    }).start(() => this.onSwipeComplete(direction));
+  }
+
+  onSwipeComplete(direction) {
+    //callbacks passed to compoent
+    const { onSwipeLeft, onSwipeRight, data } = this.props;
+    const item = data[this.state.index];
+
+    //call appropriate callback based on direction of swipe
+    direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
   }
 
   resetPosition() {
@@ -61,7 +78,7 @@ class Deck extends Component {
 
   renderCards() {
     return this.props.data.map((item, index) => {
-      if (index === 0) {
+      if (index === this.state.index) {
         return (
           <Animated.View
             key={item.id}
